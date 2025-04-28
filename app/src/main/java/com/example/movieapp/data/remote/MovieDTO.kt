@@ -26,7 +26,7 @@ fun MovieDTO.toDomain(): Movie {
         id = id,
         title = title,
         overview = overview,
-        posterUrl = posterPath.let { "${TmdbApiService.BASE_URL}$it" },
+        posterUrl = posterPath.let { "${TmdbApiService.BASE_POSTER_IMAGE_URL}$it" },
         releaseYear = releaseDate.takeIf { it.length >= 4 }?.substring(0, 4)
     )
 }
