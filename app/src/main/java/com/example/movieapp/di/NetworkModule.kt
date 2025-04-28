@@ -55,6 +55,12 @@ object NetworkModule {
 
     @Provides
     @Singleton
+    fun providesNetworkJson(): Json = Json {
+        ignoreUnknownKeys = true
+    }
+
+    @Provides
+    @Singleton
     fun provideRetrofit(
         networkJson: Json,
         okHttpClient: OkHttpClient
