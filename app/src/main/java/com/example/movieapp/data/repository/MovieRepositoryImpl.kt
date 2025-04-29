@@ -3,11 +3,10 @@ package com.example.movieapp.data.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import androidx.paging.PagingSource
-import androidx.paging.PagingState
 import com.example.movieapp.data.datasource.TmdbRemoteDataSource
 import com.example.movieapp.data.mapper.toDomain
 import com.example.movieapp.data.paging.MoviePagingSource
+import com.example.movieapp.data.paging.SearchPagingSource
 import com.example.movieapp.domain.model.MediaType
 import com.example.movieapp.domain.model.Movie
 import com.example.movieapp.domain.model.MovieDetails
@@ -32,14 +31,7 @@ class MovieRepositoryImpl @Inject constructor(
     override fun searchMedia(query: String, mediaType: MediaType): Flow<PagingData<SearchResultItem>> {
         return Pager(
             config = PagingConfig(pageSize = 20),
-            pagingSourceFactory = {
-                object : PagingSource<Int, SearchResultItem>() {
-                    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, SearchResultItem> {
-                        return LoadResult.Error(NotImplementedError("SearchPagingSource not implemented"))
-                    }
-                    override fun getRefreshKey(state: PagingState<Int, SearchResultItem>): Int? = null
-                }
-            }
+            pagingSourceFactory = { SearchPagingSource(remoteDataSource, query) }
         ).flow
     }
 
