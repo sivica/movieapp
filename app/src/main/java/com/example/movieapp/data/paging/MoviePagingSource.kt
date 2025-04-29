@@ -3,7 +3,7 @@ package com.example.movieapp.data.paging
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.example.movieapp.data.datasource.TmdbRemoteDataSource
-import com.example.movieapp.data.remote.toDomain
+import com.example.movieapp.data.mapper.toDomain
 import com.example.movieapp.domain.model.Movie
 import com.example.movieapp.domain.util.Result
 

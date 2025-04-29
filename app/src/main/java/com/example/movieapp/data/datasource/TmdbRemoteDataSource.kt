@@ -1,5 +1,6 @@
 package com.example.movieapp.data.datasource
 
+import com.example.movieapp.data.remote.MovieDetailsDTO
 import com.example.movieapp.data.remote.MovieListDTO
 import com.example.movieapp.data.remote.TmdbApiService
 import com.example.movieapp.domain.util.Result
@@ -9,6 +10,9 @@ import javax.inject.Inject
 
 interface TmdbRemoteDataSource {
     suspend fun getPopularMovies(page: Int): Result<MovieListDTO>
+    suspend fun getMovieDetails(id: Int): Result<MovieDetailsDTO>
+    suspend fun searchMovies(query: String, page: Int): Result<MovieListDTO>
+
 }
 
 class TmdbRemoteDataSourceImpl @Inject constructor(
@@ -36,5 +40,13 @@ class TmdbRemoteDataSourceImpl @Inject constructor(
 
     override suspend fun getPopularMovies(page: Int): Result<MovieListDTO> {
         return safeApiCall { tmdbApi.getPopularMovies(page) }
+    }
+
+    override suspend fun getMovieDetails(id: Int): Result<MovieDetailsDTO> {
+        return safeApiCall { tmdbApi.getMovieDetails(id) }
+    }
+
+    override suspend fun searchMovies(query: String, page: Int): Result<MovieListDTO> {
+        return safeApiCall { tmdbApi.searchMovies(query, page) }
     }
 }
