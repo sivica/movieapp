@@ -18,6 +18,7 @@ import androidx.navigation.navArgument
 import com.example.movieapp.ui.moviedetail.MovieDetailsScreen
 import com.example.movieapp.ui.movielist.MovieListScreen
 import com.example.movieapp.ui.navigation.Screen
+import com.example.movieapp.ui.search.SearchScreen
 import com.example.movieapp.ui.theme.MovieAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -58,6 +59,10 @@ fun AppNavigation() {
             })
         ) {
             MovieDetailsScreen(navController = navController)
+        }
+
+        composable(Screen.Search.route) {
+            SearchScreen(navController = navController)
         }
     }
 }
