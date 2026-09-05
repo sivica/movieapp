@@ -54,5 +54,5 @@ Inspect the images for empty/loading states and unrelated notifications. Add ima
 - The build attempt stopped while downloading Gradle 8.11.1 with `Network is unreachable`, before compilation or test execution.
 - A retry through the environment-provided proxy ended with network approval cancelled before a decision was returned. The build and tests remain unexecuted.
 - This workspace has a Java 17 runtime, but no configured full JDK, Android SDK, device, or emulator. No screenshots or live TMDB checks were performed.
-- Build, lint, unit tests, and device checks still need to run in an Android development environment before merging.
-- The new GitHub Actions workflow has not been published or run. Documentation links and the version catalog were checked locally; those checks do not substitute for an Android build.
+- Require passing Android build, lint, and unit-test checks, plus the manual device checks above, before merging.
+- See [pull request #1](https://github.com/sivica/movieapp/pull/1) for GitHub Actions results. Documentation links and the version catalog were checked locally; those checks do not substitute for an Android build.

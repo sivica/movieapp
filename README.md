@@ -90,7 +90,7 @@ The app uses one Gradle module with packages for UI, domain, data, and dependenc
 
 The [ViewModel test](app/src/test/java/com/example/movieapp/ui/movielist/MovieListViewModelTest.kt) awaits a Paging snapshot and checks the returned movies. The instrumentation test is only a package-name smoke test, not end-to-end UI coverage. Unit-test reports are generated under `app/build/reports/tests/testDebugUnitTest/`.
 
-The [Android checks workflow](.github/workflows/android.yml) is configured to run unit tests, Android lint, and a debug build on pull requests and pushes to `master`. It uses JDK 17 and builds without a TMDB key. It does not publish an APK or deploy the app. This new workflow has not yet run; it is not evidence of a passing build.
+The [Android checks workflow](.github/workflows/android.yml) is configured to run unit tests, Android lint, and a debug build on pull requests and pushes to `master`. It uses JDK 17 and builds without a TMDB key. It does not publish an APK or deploy the app. Check [GitHub Actions](https://github.com/sivica/movieapp/actions) for run results.
 
 Use the [review and screenshot guide](docs/REVIEW_GUIDE.md) for manual happy-path and failure-state checks. Real screenshots have not been captured in this polish pass; the guide records what to capture.
 
