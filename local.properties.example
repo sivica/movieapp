@@ -1,0 +1,6 @@
+# Copy this file to local.properties, or add this entry to an existing local.properties.
+# Use the TMDB v3 API key, without quotes. An empty value allows builds and unit tests.
+tmdb_api_key=
+
+# Android Studio usually writes sdk.dir automatically. Preserve your existing value.
+# Alternatively, set ANDROID_HOME to your Android SDK directory.
