@@ -28,7 +28,7 @@ The unit test now calls `asSnapshot` directly inside `runTest`, using an in-memo
 | Disable networking and load a new page or detail | A retry control appears; restoring networking and retrying recovers. |
 | Open detail and navigate back | The app returns to the previous list/search route. |
 
-These are expected outcomes to verify, not a record of checks already passed.
+These are expected outcomes. The dated results below record the checks completed for this polish branch.
 
 ## Capture real screenshots
 
@@ -54,5 +54,20 @@ Inspect the images for empty/loading states and unrelated notifications. Add ima
 - `:app:installDebug` completed successfully with Android Studio's JDK 17 and a local, ignored TMDB v3 key.
 - On September 6, 2026, the popular list, the first movie's detail screen, and search results for `Dune` loaded from TMDB on a Pixel 7 emulator running Android 16 (API 36).
 - The three real captures are stored in `docs/screenshots/` and linked from the README.
-- The pagination, empty-result, offline, retry, and back-navigation scenarios in the manual table remain to be checked before merging.
 - [Pull request #1](https://github.com/sivica/movieapp/pull/1) passed its GitHub Actions unit-test, lint, and debug-build jobs for this branch.
+
+### Remaining-scenario results
+
+Tested September 6, 2026 on the same Pixel 7 emulator running Android 16 (API 36). The branch was clean and synchronized with `origin/polish/movieapp-portfolio` at `de34b8d`; the executable application source is unchanged from `fea5b39` because `de34b8d` contains documentation and screenshot updates only. The locally configured TMDB v3 key remained ignored and was not inspected or exposed.
+
+| Scenario | Status | Observed result |
+|---|---|---|
+| Popular-list pagination | PASS | Scrolling beyond the initial results loaded additional movies without a crash. Opening the newly loaded `Mayday` row showed matching title, year, runtime, genres, and overview; returning preserved the paginated list position. |
+| Query changes | PASS | A rapid edit from `Dune` to `Batman` settled on `Batman`; the visible results all corresponded to the final query after the 500 ms debounce. |
+| Empty results | PASS | `zzzxqv901734movie` completed with a no-results message for that exact query and no stale movie rows. |
+| Clear query | PASS | Clearing loaded search results removed the rows and restored the `Enter a query to search` prompt. |
+| Offline page loading and retry | PASS | With emulator airplane mode enabled, scrolling to a genuinely uncached page exposed an append error and `Retry`. After restoring connectivity, `Retry` loaded more rows, including `The Godfather`. |
+| Offline details and retry | PASS | Opening the previously unopened `Prison on Fire` detail while offline produced a timeout and `Retry`. After connectivity was restored, retry loaded the correct title and metadata. |
+| Back navigation | PASS | Toolbar and Android system Back both returned from details to the correct Popular Movies or Search route. The `Batman` query and search position were retained, and the popular list retained its paginated position. |
+
+Emulator airplane mode was disabled again after the failure-state checks.
