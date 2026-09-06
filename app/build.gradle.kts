@@ -27,7 +27,19 @@ android {
         if (localPropsFile.exists()) {
             localPropsFile.inputStream().use { localProps.load(it) }
         }
-        buildConfigField("String", "TMDB_API_KEY", localProps.getProperty("tmdb_api_key", ""))
+        // Prefer an environment variable for automation; keep quoted local values compatible.
+        val tmdbApiKey = providers.environmentVariable("TMDB_API_KEY")
+            .orElse(localProps.getProperty("tmdb_api_key", ""))
+            .get()
+            .trim()
+            .removeSurrounding("\"")
+            .replace("\\", "\\\\")
+            .replace("\"", "\\\"")
+            .replace("\n", "\\n")
+            .replace("\r", "\\r")
+
+        // An empty key still produces valid Java so unit tests and debug builds need no secret.
+        buildConfigField("String", "TMDB_API_KEY", "\"$tmdbApiKey\"")
     }
 
     buildTypes {

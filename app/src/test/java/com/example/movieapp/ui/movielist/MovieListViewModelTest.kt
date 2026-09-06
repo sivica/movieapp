@@ -2,17 +2,15 @@
 
 package com.example.movieapp.ui.movielist
 
-import androidx.paging.PagingData
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.testing.asPagingSourceFactory
 import androidx.paging.testing.asSnapshot
 import com.example.movieapp.domain.model.Movie
 import com.example.movieapp.domain.usecase.GetPopularMoviesUseCase
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
@@ -51,19 +49,18 @@ class MovieListViewModelTest {
             )
         )
 
-        val testPagingData: PagingData<Movie> = PagingData.from(testMovies)
-
-        val testFlow: Flow<PagingData<Movie>> = flowOf(testPagingData)
+        val testFlow = Pager(
+            config = PagingConfig(pageSize = 20, enablePlaceholders = false),
+            pagingSourceFactory = testMovies.asPagingSourceFactory()
+        ).flow
 
         every { getPopularMoviesUseCase() } returns testFlow
 
         viewModel = MovieListViewModel(getPopularMoviesUseCase)
 
-        backgroundScope.launch(StandardTestDispatcher()) {
-            val snapshot: List<Movie> = viewModel.popularMoviesFlow.asSnapshot {
-                scrollTo(index = 1)
-            }
-            assertEquals(testMovies, snapshot)
+        val snapshot: List<Movie> = viewModel.popularMoviesFlow.asSnapshot {
+            scrollTo(index = 1)
         }
+        assertEquals(testMovies, snapshot)
     }
 }
