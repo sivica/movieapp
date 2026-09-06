@@ -50,9 +50,9 @@ Inspect the images for empty/loading states and unrelated notifications. Add ima
 
 ## Validation status for this pass
 
-- Source and documentation reviewed against the checkout based on `46bb153`.
-- The build attempt stopped while downloading Gradle 8.11.1 with `Network is unreachable`, before compilation or test execution.
-- A retry through the environment-provided proxy ended with network approval cancelled before a decision was returned. The build and tests remain unexecuted.
-- This workspace has a Java 17 runtime, but no configured full JDK, Android SDK, device, or emulator. No screenshots or live TMDB checks were performed.
-- Require passing Android build, lint, and unit-test checks, plus the manual device checks above, before merging.
-- See [pull request #1](https://github.com/sivica/movieapp/pull/1) for GitHub Actions results. Documentation links and the version catalog were checked locally; those checks do not substitute for an Android build.
+- Android Studio Quail 2 (2026.1.2 Patch 1) synced the project and installed the debug app from branch `polish/movieapp-portfolio` at `fea5b39`.
+- `:app:installDebug` completed successfully with Android Studio's JDK 17 and a local, ignored TMDB v3 key.
+- On September 6, 2026, the popular list, the first movie's detail screen, and search results for `Dune` loaded from TMDB on a Pixel 7 emulator running Android 16 (API 36).
+- The three real captures are stored in `docs/screenshots/` and linked from the README.
+- The pagination, empty-result, offline, retry, and back-navigation scenarios in the manual table remain to be checked before merging.
+- [Pull request #1](https://github.com/sivica/movieapp/pull/1) passed its GitHub Actions unit-test, lint, and debug-build jobs for this branch.

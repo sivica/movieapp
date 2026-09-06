@@ -11,6 +11,14 @@ An Android movie browser built with Kotlin, Jetpack Compose, and the [TMDB API](
 
 The implemented endpoints cover **movies only**. There is no TV search or video playback.
 
+## Screenshots
+
+Captured on a Pixel 7 emulator running Android 16 (API 36) on September 6, 2026.
+
+| Popular movies | Movie details | Search |
+|---|---|---|
+| <img src="docs/screenshots/popular.png" alt="Popular movies list" width="280"> | <img src="docs/screenshots/detail.png" alt="Movie details" width="280"> | <img src="docs/screenshots/search.png" alt="Movie search results" width="280"> |
+
 ## Run locally
 
 ### Requirements
@@ -92,7 +100,7 @@ The [ViewModel test](app/src/test/java/com/example/movieapp/ui/movielist/MovieLi
 
 The [Android checks workflow](.github/workflows/android.yml) is configured to run unit tests, Android lint, and a debug build on pull requests and pushes to `master`. It uses JDK 17 and builds without a TMDB key. It does not publish an APK or deploy the app. Check [GitHub Actions](https://github.com/sivica/movieapp/actions) for run results.
 
-Use the [review and screenshot guide](docs/REVIEW_GUIDE.md) for manual happy-path and failure-state checks. Real screenshots have not been captured in this polish pass; the guide records what to capture.
+Use the [review and screenshot guide](docs/REVIEW_GUIDE.md) for manual happy-path and failure-state checks. The screenshots above were captured from a live TMDB-backed debug build; the guide records the validation environment and remaining checks.
 
 ## Current scope and next improvements
 
