@@ -3,6 +3,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 kotlin {
@@ -31,13 +32,21 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(libs.kotlinx.coroutines.core)
-            // paging-common is KMP; the repository contract still exposes PagingData.
-            // Pager / PagingSource implementations stay in :app.
+            // paging-common is KMP; Pager / PagingSource can live next to the repository impl.
             implementation(libs.paging.common)
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.serialization.kotlinx.json)
+            implementation(libs.kotlinx.serialization.json)
+        }
+        androidMain.dependencies {
+            implementation(libs.ktor.client.okhttp)
+            implementation(libs.okhttp.logging)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
             implementation(libs.test.kotlinx.coroutines)
+            implementation(libs.ktor.client.mock)
         }
     }
 }

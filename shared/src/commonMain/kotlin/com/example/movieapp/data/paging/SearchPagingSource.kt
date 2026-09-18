@@ -24,7 +24,7 @@ class SearchPagingSource(
         return when (result) {
             is Result.Success -> {
                 val data = result.data
-                val totalPages = data.totalPages ?: 0
+                val totalPages = data.totalPages
 
                 val searchResults: List<SearchResultItem> =
                     data.results.map { it.toSearchResultItemDomain() }

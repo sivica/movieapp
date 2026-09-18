@@ -4,6 +4,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class GenreDTO(
-    val id: Int?,
-    val name: String?
+    val id: Int? = null,
+    val name: String? = null
 )

@@ -12,12 +12,11 @@ import com.example.movieapp.domain.model.Movie
 import com.example.movieapp.domain.model.MovieDetails
 import com.example.movieapp.domain.model.SearchResultItem
 import com.example.movieapp.domain.repository.MovieRepository
+import com.example.movieapp.domain.util.Result
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import javax.inject.Inject
-import com.example.movieapp.domain.util.Result
 
-class MovieRepositoryImpl @Inject constructor(
+class MovieRepositoryImpl(
     private val remoteDataSource: TmdbRemoteDataSource
 ) : MovieRepository {
 
@@ -39,7 +38,7 @@ class MovieRepositoryImpl @Inject constructor(
         return flow {
             when (val result = remoteDataSource.getMovieDetails(id)) {
                 is Result.Success -> {
-                    val domainDetails  = result.data.toDomain()
+                    val domainDetails = result.data.toDomain()
                     if (domainDetails != null) {
                         emit(Result.Success(domainDetails))
                     } else {
