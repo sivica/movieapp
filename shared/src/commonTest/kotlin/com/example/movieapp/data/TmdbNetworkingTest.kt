@@ -10,6 +10,7 @@ import com.example.movieapp.data.repository.MovieRepositoryImpl
 import com.example.movieapp.domain.model.MediaType
 import com.example.movieapp.domain.util.Result
 import io.ktor.client.engine.mock.MockEngine
+import io.ktor.client.engine.mock.MockRequestHandleScope
 import io.ktor.client.engine.mock.respond
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
@@ -126,7 +127,7 @@ class TmdbNetworkingTest {
     private fun dataSource(engine: MockEngine) =
         TmdbRemoteDataSource(createTmdbHttpClient(apiKey = "test-key", engine = engine))
 
-    private fun jsonResponse(
+    private fun MockRequestHandleScope.jsonResponse(
         body: String,
         status: HttpStatusCode = HttpStatusCode.OK,
     ) = respond(
