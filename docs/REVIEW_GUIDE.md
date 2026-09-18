@@ -9,7 +9,7 @@ This pass improves setup and explains the existing app accurately. It fixes API-
 Use JDK 17 with Android SDK Platform 35 and Build Tools 35.0.0:
 
 ```bash
-./gradlew :app:testDebugUnitTest :app:lintDebug :app:assembleDebug
+./gradlew :shared:jvmTest :app:testDebugUnitTest :app:lintDebug :app:assembleDebug
 ```
 
 Confirm that a clean checkout builds with no TMDB key. Then configure a v3 key in `local.properties` and build again before the live-app checks. Preserve existing SDK paths and credentials.

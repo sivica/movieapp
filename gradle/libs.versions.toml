@@ -6,6 +6,7 @@ junit = "4.13.2"
 junitVersion = "1.2.1"
 mockk = "1.13.10"
 kotlinx_coroutines_test = "1.10.2"
+kotlinxCoroutines = "1.10.2"
 paging_testing = "3.3.6"
 espressoCore = "3.5.1"
 lifecycleRuntimeKtx = "2.6.1"
@@ -29,6 +30,7 @@ test-mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
 test-kotlinx-coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinx_coroutines_test" }
 test-androidx-paging = { group = "androidx.paging", name = "paging-testing", version.ref = "paging_testing" }
 kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlin" }
+kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinxCoroutines" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
@@ -46,6 +48,7 @@ retrofit-core = { group = "com.squareup.retrofit2", name = "retrofit", version.r
 retrofit-kotlin-serialization = { group = "com.squareup.retrofit2", name = "converter-kotlinx-serialization", version.ref = "retrofit" }
 okhttp-logging = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
+paging-common = { group = "androidx.paging", name = "paging-common", version.ref = "paging" }
 paging-runtime = { group = "androidx.paging", name = "paging-runtime", version.ref = "paging" }
 paging-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "paging" }
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
@@ -54,7 +57,9 @@ androidx-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navig
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
+android-library = { id = "com.android.library", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
