@@ -70,15 +70,15 @@ On Windows, use `gradlew.bat` in place of `./gradlew`. If a downloaded ZIP loses
 
 ## Architecture and code tour
 
-The Android app lives in `:app`. Domain models, Ktor TMDB networking, DTO mapping, and `MovieRepositoryImpl` live in the `:shared` Kotlin Multiplatform module. Compose UI and Hilt remain Android-only. See [shared-module migration notes](docs/SHARED_MIGRATION.md).
+The Android app lives in `:app`. Domain models, use cases, Ktor TMDB networking, DTO mapping, and `MovieRepositoryImpl` live in the `:shared` Kotlin Multiplatform module. Compose UI and Hilt remain Android-only. See [shared-module migration notes](docs/SHARED_MIGRATION.md).
 
 | Area | Responsibility | Starting point |
 |---|---|---|
 | Compose UI | Render state, collect paging data, and handle user actions | [MovieListScreen](app/src/main/java/com/example/movieapp/ui/movielist/MovieListScreen.kt), [SearchScreen](app/src/main/java/com/example/movieapp/ui/search/SearchScreen.kt) |
 | ViewModels | Cache paging streams and expose screen state | [MovieListViewModel](app/src/main/java/com/example/movieapp/ui/movielist/MovieListViewModel.kt), [SearchViewModel](app/src/main/java/com/example/movieapp/ui/search/SearchViewModel.kt) |
-| Shared domain | Models, `Result`, and the repository contract | [MovieRepository](shared/src/commonMain/kotlin/com/example/movieapp/domain/repository/MovieRepository.kt) |
+| Shared domain | Models, `Result`, the repository contract, and use cases | [MovieRepository](shared/src/commonMain/kotlin/com/example/movieapp/domain/repository/MovieRepository.kt), [GetPopularMoviesUseCase](shared/src/commonMain/kotlin/com/example/movieapp/domain/usecase/GetPopularMoviesUseCase.kt) |
 | Shared data | Ktor TMDB client, DTO mapping, pagers, repository impl | [MovieRepositoryImpl](shared/src/commonMain/kotlin/com/example/movieapp/data/repository/MovieRepositoryImpl.kt), [ModelMapper](shared/src/commonMain/kotlin/com/example/movieapp/data/mapper/ModelMapper.kt) |
-| Android DI | Pass `BuildConfig.TMDB_API_KEY` into the shared OkHttp/Ktor client | [NetworkModule](app/src/main/java/com/example/movieapp/di/NetworkModule.kt) |
+| Android DI | Pass `BuildConfig.TMDB_API_KEY` into the shared OkHttp/Ktor client; `@Provides` shared use cases | [NetworkModule](app/src/main/java/com/example/movieapp/di/NetworkModule.kt), [DomainModule](app/src/main/java/com/example/movieapp/di/DomainModule.kt) |
 | Navigation | Connect the popular list, search, and movie detail routes | [MainActivity](app/src/main/java/com/example/movieapp/MainActivity.kt) |
 
 ### Decisions and tradeoffs
@@ -86,7 +86,7 @@ The Android app lives in `:app`. Domain models, Ktor TMDB networking, DTO mappin
 - **Paging 3** owns page loading and exposes load states to the lists. `cachedIn(viewModelScope)` retains the paging stream for the ViewModel lifetime; it does not provide offline persistence.
 - **StateFlow and Compose** separate screen state from rendering. Detail and search state are collected with lifecycle awareness. Search uses `debounce` and `flatMapLatest` to switch streams as the query changes.
 - **DTO mapping** separates API payloads from displayed models. Networking uses Ktor in `:shared`; the Android app only supplies the API key and an OkHttp engine. The repository contract still exposes `PagingData` via `paging-common`. Hilt stays in `:app`.
-- **Hilt and repository interfaces** make dependencies explicit and allow test doubles. Use cases are small in this sample and remain in `:app` because of `@Inject`.
+- **Hilt and repository interfaces** make dependencies explicit and allow test doubles. Use cases are small, live in `:shared` as plain constructors, and are provided from `:app` with Hilt `@Provides`.
 
 ## Verification
 
