@@ -70,13 +70,13 @@ On Windows, use `gradlew.bat` in place of `./gradlew`. If a downloaded ZIP loses
 
 ## Architecture and code tour
 
-The app uses one Gradle module with packages for UI, domain, data, and dependency injection. These are package boundaries, not independently enforced module boundaries.
+The Android app lives in `:app`. Pure Kotlin domain models, `Result`, and the `MovieRepository` contract live in the `:shared` Kotlin Multiplatform module. Compose UI, Hilt, Retrofit, and Paging *implementations* remain Android-only. See [shared-module migration notes](docs/SHARED_MIGRATION.md).
 
 | Area | Responsibility | Starting point |
 |---|---|---|
 | Compose UI | Render state, collect paging data, and handle user actions | [MovieListScreen](app/src/main/java/com/example/movieapp/ui/movielist/MovieListScreen.kt), [SearchScreen](app/src/main/java/com/example/movieapp/ui/search/SearchScreen.kt) |
 | ViewModels | Cache paging streams and expose screen state | [MovieListViewModel](app/src/main/java/com/example/movieapp/ui/movielist/MovieListViewModel.kt), [SearchViewModel](app/src/main/java/com/example/movieapp/ui/search/SearchViewModel.kt) |
-| Domain | Models, use cases, and the repository contract | [MovieRepository](app/src/main/java/com/example/movieapp/domain/repository/MovieRepository.kt) |
+| Shared domain | Models, `Result`, and the repository contract | [MovieRepository](shared/src/commonMain/kotlin/com/example/movieapp/domain/repository/MovieRepository.kt) |
 | Data | Create pagers, load API pages, and map DTOs into app models | [MovieRepositoryImpl](app/src/main/java/com/example/movieapp/data/repository/MovieRepositoryImpl.kt), [ModelMapper](app/src/main/java/com/example/movieapp/data/mapper/ModelMapper.kt) |
 | Networking and DI | Wire Retrofit, OkHttp, serialization, and Hilt dependencies | [NetworkModule](app/src/main/java/com/example/movieapp/di/NetworkModule.kt), [TmdbRemoteDataSource](app/src/main/java/com/example/movieapp/data/datasource/TmdbRemoteDataSource.kt) |
 | Navigation | Connect the popular list, search, and movie detail routes | [MainActivity](app/src/main/java/com/example/movieapp/MainActivity.kt) |
@@ -85,20 +85,20 @@ The app uses one Gradle module with packages for UI, domain, data, and dependenc
 
 - **Paging 3** owns page loading and exposes load states to the lists. `cachedIn(viewModelScope)` retains the paging stream for the ViewModel lifetime; it does not provide offline persistence.
 - **StateFlow and Compose** separate screen state from rendering. Detail and search state are collected with lifecycle awareness. Search uses `debounce` and `flatMapLatest` to switch streams as the query changes.
-- **DTO mapping** separates API payloads from displayed models. The domain repository contract exposes `PagingData`, so the domain layer still depends on AndroidX Paging.
-- **Hilt and repository interfaces** make dependencies explicit and allow test doubles. Use cases are small in this sample; the project does not demonstrate complex business rules or a multi-module build.
+- **DTO mapping** separates API payloads from displayed models. The shared repository contract still exposes `PagingData` via `paging-common`; the Paging 3 runtime, Retrofit, and Hilt stay in `:app`.
+- **Hilt and repository interfaces** make dependencies explicit and allow test doubles. Use cases are small in this sample and remain in `:app` because of `@Inject`.
 
 ## Verification
 
 ```bash
-./gradlew :app:testDebugUnitTest :app:lintDebug :app:assembleDebug
+./gradlew :shared:jvmTest :app:testDebugUnitTest :app:lintDebug :app:assembleDebug
 # Requires a running emulator or connected device:
 ./gradlew :app:connectedDebugAndroidTest
 ```
 
 The [ViewModel test](app/src/test/java/com/example/movieapp/ui/movielist/MovieListViewModelTest.kt) awaits a Paging snapshot and checks the returned movies. The instrumentation test is only a package-name smoke test, not end-to-end UI coverage. Unit-test reports are generated under `app/build/reports/tests/testDebugUnitTest/`.
 
-The [Android checks workflow](.github/workflows/android.yml) is configured to run unit tests, Android lint, and a debug build on pull requests and pushes to `master`. It uses JDK 17 and builds without a TMDB key. It does not publish an APK or deploy the app. Check [GitHub Actions](https://github.com/sivica/movieapp/actions) for run results.
+The [Android checks workflow](.github/workflows/android.yml) is configured to run `:shared:jvmTest`, app unit tests, Android lint, and a debug build on pull requests and pushes to `master`. It uses JDK 17 and builds without a TMDB key. It does not publish an APK or deploy the app. Check [GitHub Actions](https://github.com/sivica/movieapp/actions) for run results.
 
 Use the [review and screenshot guide](docs/REVIEW_GUIDE.md) for manual happy-path and failure-state checks. The screenshots above were captured from a live TMDB-backed debug build; the guide records the validation environment and remaining checks.
 
