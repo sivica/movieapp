@@ -1,6 +1,6 @@
 # Shared Kotlin Multiplatform extraction
 
-Path 1 continues: `:shared` now owns TMDB networking, DTO mapping, paging sources, and `MovieRepositoryImpl`. Compose UI is **not** Compose Multiplatform, and there is no iOS UI in this change.
+Path 1 continues: `:shared` now owns TMDB networking, DTO mapping, paging sources, `MovieRepositoryImpl`, and the three use cases. Compose UI is **not** Compose Multiplatform, and there is no iOS UI in this change.
 
 ## Inventory
 
@@ -14,6 +14,7 @@ Path 1 continues: `:shared` now owns TMDB networking, DTO mapping, paging source
 | DTOs (`MovieDTO`, `MovieListDTO`, `MovieDetailsDTO`, `GenreDTO`) + `ModelMapper` | kotlinx.serialization models and pure mapping |
 | `createTmdbHttpClient` + `TmdbRemoteDataSource` | Ktor Client in `commonMain`. The v3 API key is a constructor argument. |
 | `MoviePagingSource`, `SearchPagingSource`, `MovieRepositoryImpl` | `Pager` / `PagingSource` from `paging-common`; they call the Ktor data source |
+| `GetPopularMoviesUseCase`, `SearchMediaUseCase`, `GetMovieDetailsUseCase` | Pure Kotlin wrappers around `MovieRepository`. Search still trims the query. No Hilt/Android annotations. |
 
 Packages for domain types are unchanged (`com.example.movieapp.domain.*`). Data types live under `com.example.movieapp.data.*`.
 
@@ -22,10 +23,9 @@ Packages for domain types are unchanged (`com.example.movieapp.domain.*`). Data 
 | Area | Why it stays |
 |---|---|
 | Jetpack Compose screens, theme, navigation, `MainActivity` | Android Compose UI; not being rewritten to Compose Multiplatform |
-| `MovieApplication`, Hilt `NetworkModule`, `@HiltViewModel`, `@Inject` use cases | Hilt / Android DI |
+| `MovieApplication`, Hilt `NetworkModule` / `DomainModule`, `@HiltViewModel` | Hilt / Android DI. `DomainModule` `@Provides` the shared use cases from `MovieRepository`. |
 | `createAndroidTmdbHttpClient`, `createAndroidMovieRepository` | OkHttp engine + debug BODY logging. The app passes `BuildConfig.TMDB_API_KEY`. |
 | ViewModels, Coil, Navigation Compose | AndroidX / Compose |
-| Use cases | Tiny wrappers that stay in `:app` because of Hilt `@Inject` |
 
 ### API key (not in git)
 
@@ -53,8 +53,8 @@ That Android adapter creates an OkHttp Ktor engine and calls `createTmdbHttpClie
 ./gradlew :app:assembleDebug
 ```
 
-`:shared:jvmTest` runs `commonTest` on the JVM target (mapping + Ktor `MockEngine` repository/paging tests). iOS targets are declared (`iosArm64`, `iosSimulatorArm64`) so an Xcode app can link the framework later; they are not compiled in this Linux CI workflow (`kotlin.native.ignoreDisabledTargets=true`).
+`:shared:jvmTest` runs `commonTest` on the JVM target (mapping + Ktor `MockEngine` repository/paging tests + use case tests). iOS targets are declared (`iosArm64`, `iosSimulatorArm64`) so an Xcode app can link the framework later; they are not compiled in this Linux CI workflow (`kotlin.native.ignoreDisabledTargets=true`).
 
 ## Suggested next step
 
-Move the three use cases into `:shared` (drop Hilt `@Inject` there; keep `@Provides` or constructor calls in `:app`). Abstracting `PagingData` out of the domain contract is optional and can wait until an iOS client needs a non-Paging consumer.
+A non-Android client can now construct the use cases with a `MovieRepository` implementation. Remaining Android-only work is Compose UI, ViewModels, and Hilt. Abstracting `PagingData` out of the domain contract is optional and can wait until an iOS client needs a non-Paging consumer.

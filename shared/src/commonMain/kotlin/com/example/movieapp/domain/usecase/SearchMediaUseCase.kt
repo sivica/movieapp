@@ -5,9 +5,8 @@ import com.example.movieapp.domain.model.MediaType
 import com.example.movieapp.domain.model.SearchResultItem
 import com.example.movieapp.domain.repository.MovieRepository
 import kotlinx.coroutines.flow.Flow
-import javax.inject.Inject
 
-class SearchMediaUseCase @Inject constructor(
+class SearchMediaUseCase(
     private val repository: MovieRepository
 ) {
     operator fun invoke(query: String, mediaType: MediaType): Flow<PagingData<SearchResultItem>> {
